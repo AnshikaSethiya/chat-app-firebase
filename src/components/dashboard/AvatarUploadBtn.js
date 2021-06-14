@@ -4,6 +4,7 @@ import { useModalState } from '../../misc/custom-hooks'
 import AvatarEditor from 'react-avatar-editor'
 import { database, storage } from '../../misc/Firebase'
 import ProfileAvatar from '../ProfileAvatar'
+import { getUserUpdates } from '../../misc/Helpers'
 import { useProfile } from '../../context/profile.context'
 
 const fileInputType = '.jpg, .jpeg, .png'
@@ -66,11 +67,19 @@ const AvatarUploadBtn = () => {
     
           const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
     
-          const userAvatarRef = database
-            .ref(`/profiles/${profile.uid}`)
-            .child('avatar');
+          const updates = await getUserUpdates(
+            profile.uid,
+             'avatar',
+             downloadUrl,
+             database);
+
+             await database.ref().update(updates)
+
+        //   const userAvatarRef = database
+        //     .ref(`/profiles/${profile.uid}`)
+        //     .child('avatar');
     
-          userAvatarRef.set(downloadUrl);
+        //   userAvatarRef.set(downloadUrl);
     
           setIsLoading(false);
           Alert.info('Avatar has been uploaded', 4000);

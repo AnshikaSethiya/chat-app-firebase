@@ -5,6 +5,7 @@ import Message from '../../components/chat-window/messages'
 import ChatBottom from '../../components/chat-window/bottom'
 import { useParams } from 'react-router'
 import { useRooms } from '../../context/rooms.context'
+import { CurrentRoomProvider } from '../../context/current-room.context'
 
 
 const Chat = () => {
@@ -24,8 +25,15 @@ const Chat = () => {
         )
     }
 
+    const {name, description} = currentRoom
+
+    const currentRoomData = {
+        name,
+        description
+    }
+
     return (
-        <>
+        <CurrentRoomProvider data={currentRoomData}>
             <div className="chat-top">
                 <ChatTop /> 
             </div>
@@ -36,7 +44,7 @@ const Chat = () => {
             <div className="chat-bottom">
                 <ChatBottom />
             </div>
-        </>
+        </CurrentRoomProvider>
     )
 }
 
