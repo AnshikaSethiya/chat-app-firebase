@@ -27,6 +27,7 @@ export const ProfileContext = createContext();
   
       const authUnsub = auth.onAuthStateChanged(authObj => {
         if (authObj) {
+         console.log('authObj.uid', authObj.uid) 
           userStatusRef = database.ref(`/status/${authObj.uid}`);
           useRef = database.ref(`/profiles/${authObj.uid}`);
           useRef.on('value', snap => {
@@ -47,7 +48,7 @@ export const ProfileContext = createContext();
             .ref('.info/connected')
             .on('value', snapshot => {
               // If we're not currently connected, don't do anything.
-              if (snapshot.val() === false) {
+              if (!!snapshot.val() === false) {
                 return;
               }
   

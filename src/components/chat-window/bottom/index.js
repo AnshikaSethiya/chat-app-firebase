@@ -67,7 +67,7 @@ const onSendClick = async () =>{
                 <Input placeholder="Write a new message here.."
                     value={input}
                     onChange={onInputChange}
-                    onkeyDown={onKeyDown} />
+                    onKeyDown={onKeyDown} />
 
                 <InputGroup.Button color="blue" 
                     appearance="primary" 
