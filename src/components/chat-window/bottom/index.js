@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { InputGroup, Input, Icon, Alert } from 'rsuite'
 import firebase from 'firebase/app'
+import AttachmentBtnModal from './AttachmentBtnModal'
 import { useProfile } from '../../../context/profile.context'
 import { useParams } from 'react-router'
 import { database } from '../../../misc/Firebase'
@@ -59,12 +60,46 @@ const onSendClick = async () =>{
         if(ev.keyCode === 13){
             ev.preventDefault()
             console.log("Key pressed")
+            onSendClick()
         }
     }
 
+    const afterUpload = useCallback(async (files) => {
+
+        setIsLoading(true)
+
+        const updates = {};
+
+        files.forEach(file => {
+
+            const msgData = assembleMessage(profile,chatId);
+            msgData.file = file;
+        
+            const messageId = database.ref('messages').push().key;
+            updates[`/messages/${messageId}`] = msgData;
+        })
+
+        const lastMsgId = Object.keys(updates).pop()
+
+        updates[`/rooms/${chatId}/lastMessage`] = {
+            ...updates[lastMsgId],
+            msgId: lastMsgId,
+        };
+
+        try {
+            await database.ref().update(updates);
+            setIsLoading(false);
+        } catch (err) {
+            setIsLoading(false);
+            Alert.error(err.message,40000);
+        }
+
+    },[chatId, profile])
     return (
         <div>
+        
             <InputGroup>
+            <AttachmentBtnModal afterUpload={afterUpload}/>
                 <Input placeholder="Write a new message here.."
                     value={input}
                     onChange={onInputChange}

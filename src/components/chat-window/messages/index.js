@@ -78,7 +78,7 @@ const Messages = () => {
 
     const handleDelete = useCallback(
         async msgId => {
-          if (!window.confirm('delete this message ?')) {
+          if (!window.confirm('Delete this message ?')) {
             return;
           }
     
