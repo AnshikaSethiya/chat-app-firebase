@@ -52,3 +52,22 @@ export async function getUserUpdates(userId, keyToUpdate, value, db){
 
     return updates;
 }
+
+
+// groupBy(messages, (mshItem) => msgItem.createAt)
+
+export function groupBy(array, groupingKeyFn) {
+    return array.reduce((result, item) => {
+
+        const groupingKey = groupingKeyFn(item);
+
+        if(!result[groupingKey]){
+            result[groupingKey] = []
+        }
+
+        result[groupingKey].push(item)
+
+        return result
+
+    }, {})
+}
