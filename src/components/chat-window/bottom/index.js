@@ -5,6 +5,7 @@ import AttachmentBtnModal from './AttachmentBtnModal'
 import { useProfile } from '../../../context/profile.context'
 import { useParams } from 'react-router'
 import { database } from '../../../misc/Firebase'
+import AudioMsgBtn from './AudioMsgBtn'
 
 
 function assembleMessage(profile,chatId){
@@ -100,6 +101,7 @@ const onSendClick = async () =>{
         
             <InputGroup>
             <AttachmentBtnModal afterUpload={afterUpload}/>
+            <AudioMsgBtn afterUpload={afterUpload}/>
                 <Input placeholder="Write a new message here.."
                     value={input}
                     onChange={onInputChange}

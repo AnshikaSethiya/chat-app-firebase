@@ -1,5 +1,6 @@
 import React,{ memo } from 'react'
 import Timeago from 'timeago-react' 
+import ImgBtnModal from './ImgBtnModal'
 import ProfileAvatar from '../../ProfileAvatar'
 import ProfileInfoBtnModal from './ProfileInfoBtnModal'
 import PresenceDot from '../../PresenceDot'
@@ -10,9 +11,33 @@ import { auth } from '../../../misc/Firebase'
 import { useHover, useMediaQuery } from '../../../misc/custom-hooks'
 
 
+const renderFileMEssage = (file) => {
+    if(file.contentType.includes('image')){
+        return(
+            <div className="height-220">
+                <ImgBtnModal src={file.url} fileName={file.name}/>
+            </div>
+         );
+    }
+
+    if(file.contentType.includes('audio')){
+        return (
+            <audio controls>
+                <source src={file.url} type="audio/mp3"/>
+                Your Browser does not support the audio element
+            </audio>
+        )
+    }
+
+    return <a href={file.url}>Download {file.name}</a>
+}
+
+
+
+
 const MessageItem = ({message, handleAdmin, handleLike, handleDelete}) => {
  
-    const { author, createdAt, text, likes, likeCount } = message;
+    const { author, createdAt, text,file, likes, likeCount } = message;
 
     const [selfRef, isHovered] = useHover();
     const isMobile = useMediaQuery(('(max-width:992px)'))
@@ -71,13 +96,14 @@ const MessageItem = ({message, handleAdmin, handleLike, handleDelete}) => {
                     isVisible={canShowIcons}
                     iconName="close"
                     tooltip="Delete this message"
-                    onClick={() => handleDelete(message.id)}
+                    onClick={() => handleDelete(message.id, file)}
                 />
                 )}
             </div>
 
             <div>
-                <span className="word-break-all">{text}</span>
+            { text && <span className="word-break-all">{text}</span>}
+            {file && renderFileMEssage(file)}
             </div>
 
 
